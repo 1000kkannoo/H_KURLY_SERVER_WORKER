@@ -3,8 +3,10 @@ package dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Controller;
 import dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Dto.WorkerLoginDto;
 import dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Jwt.JwtFilter;
 import dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Jwt.TokenProvider;
+import dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Model.StatusTrue;
 import dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Repository.WorkerRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,13 +25,14 @@ import javax.validation.Valid;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "/auth")
+@Slf4j
 public class LoginController {
     private final WorkerRepository managerRepository;
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
     @PostMapping("/login")
-    public ResponseEntity<String> authorize(@Valid @RequestBody WorkerLoginDto.Request request) {
+    public ResponseEntity<StatusTrue> authorize(@Valid @RequestBody WorkerLoginDto.Request request) {
 
         // 토큰 생성
         UsernamePasswordAuthenticationToken authenticationToken =
@@ -43,7 +46,8 @@ public class LoginController {
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
-        return new ResponseEntity<>("good", httpHeaders, HttpStatus.OK);
+
+        return new ResponseEntity<>(StatusTrue.LOGIN_STATUS_TURE, httpHeaders, HttpStatus.OK);
     }
 
 }
