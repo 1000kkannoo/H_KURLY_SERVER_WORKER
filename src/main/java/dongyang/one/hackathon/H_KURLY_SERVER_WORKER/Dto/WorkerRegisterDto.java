@@ -2,10 +2,8 @@ package dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Dto;
 
 import lombok.*;
 
-import javax.validation.constraints.NotNull;
 
-
-public class WorkerAddDto {
+public class WorkerRegisterDto {
 
     @Getter
     @Setter
@@ -15,10 +13,10 @@ public class WorkerAddDto {
     public static class Request{
 
         private Long id;
-        private String name;
-        private String pnum;
         private String userId;
         private String pw;
+        private String name;
+        private String pnum;
         private Character gender;
         private String hnum;
 
