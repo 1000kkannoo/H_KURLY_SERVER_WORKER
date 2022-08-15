@@ -66,7 +66,7 @@ public class WorkerController {
         return workerService.idSearch(request);
     }
 
-    // 비밀번호 변경
+    // 비밀번호 변경을 위한 정보 가져오기
     @PostMapping("searchpw")
     public List<Object> pwSearchUser(
             @Valid @RequestBody final WorkerDto.pwChangeRequest request
@@ -74,11 +74,20 @@ public class WorkerController {
         return workerService.getPwChangeUser(request);
     }
 
+    // 비밀번호 변경
     @PostMapping("searchpw/pedit")
     public Constable pwChangeUser(
             @Valid @RequestBody final WorkerDto.pwChangeRequest request
     ) {
         return workerService.PwChangeUser(request);
+    }
+
+    // 회원 탈퇴
+    @PostMapping("delete")
+    public Constable deleteUser(
+        @Valid @RequestBody final WorkerDto.deleteRequest request
+    ){
+        return workerService.deleteWorker(request);
     }
 
 }
