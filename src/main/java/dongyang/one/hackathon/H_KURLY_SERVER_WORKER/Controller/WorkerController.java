@@ -66,5 +66,11 @@ public class WorkerController {
         return workerService.idSearch(request);
     }
 
-
+    // 비밀번호 변경
+    @PostMapping("searchpw")
+    public List<Object> pwSearchUser(
+            @Valid @RequestBody final WorkerDto.pwChangeRequest request
+    ) {
+        return workerService.getPwChangeUser(request);
+    }
 }
