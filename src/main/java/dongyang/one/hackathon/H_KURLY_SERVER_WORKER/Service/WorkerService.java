@@ -8,6 +8,7 @@ import dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Entity.AuthorityWorker;
 import dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Entity.Worker;
 import dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Entity.WorkerList;
 import dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Exception.DuplicateManagerException;
+import dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Model.StatusFalse;
 import dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Model.StatusTrue;
 import dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Repository.TokenRepository;
 import dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Repository.WorkerListRepository;
@@ -195,16 +196,47 @@ public class WorkerService {
     }
 
     @Transactional
-    // 비밀번호 변경 (아이디로 비밀번호 찾는부분)
+    // 비밀번호 변경 (userId_아이디로 id 찾는부분)
     public List<Object> getPwChangeUser(WorkerDto.pwChangeRequest request) {
         if (workerRepository.findByUserId(request.getUserId()).orElse(null) == null) {
             throw new RuntimeException("해당 유저가 없습니다.");
         }
+        log.info(request.getUserId());
             return workerRepository.findByUserId(request.getUserId())
                     .stream()
                     .map(WorkerDto.pwResponse::pwResponse)
                     .collect(Collectors.toList());
     }
+
     // 비밀번호 변경 (변경하는 부분)
+    public Constable PwChangeUser(WorkerDto.pwChangeRequest request) {
+
+        if(passwordEncoder.matches(request.getPw(), request.getOldPw())) // 입력한 비밀번호와 현재 비밀번호가 맞을 경우
+        {
+            AuthorityWorker authority = AuthorityWorker.builder()
+                    .authorityName("ROLE_USER")
+                    .build();
+
+            workerRepository.save(
+                    Worker.builder()
+                            .id(request.getId())
+                            .userId(request.getUserId())
+                            .pw(passwordEncoder.encode(request.getNewPw()))
+                            .name(request.getName())
+                            .pnum(request.getPnum())
+                            .gender(request.getGender())
+                            .hnum(request.getHnum())
+                            .authorities(Collections.singleton(authority))
+                            .build()
+            );
+
+            return StatusTrue.PASSWORD_CHANGE_STATUS_TRUE;
+        }
+        else {
+            return StatusFalse.PASSWORD_CHANGE_STATUS_FALSE;
+        }
+    }
+
+
 
 }
