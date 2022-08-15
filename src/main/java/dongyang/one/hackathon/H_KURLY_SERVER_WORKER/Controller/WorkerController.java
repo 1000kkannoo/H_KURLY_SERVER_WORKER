@@ -73,4 +73,12 @@ public class WorkerController {
     ) {
         return workerService.getPwChangeUser(request);
     }
+
+    @PostMapping("searchpw/pedit")
+    public Constable pwChangeUser(
+            @Valid @RequestBody final WorkerDto.pwChangeRequest request
+    ) {
+        return workerService.PwChangeUser(request);
+    }
+
 }
