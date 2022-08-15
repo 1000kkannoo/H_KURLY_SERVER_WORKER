@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.lang.constant.Constable;
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,6 +28,20 @@ public class WorkerController {
             @Valid @RequestBody final WorkerRegisterDto.Request request
     ) {
         return workerService.registerWorker(request);
+    }
+
+    // 휴대폰 인증
+    @PostMapping("check")
+    public Map<Object, Object> certifiedPhoneNumber(
+            @Valid @RequestBody final WorkerDto.phoneNumRequest request
+    ) {
+        Random rand = new Random();
+        String randNum = "";
+        for (int i = 0; i < 4; i++) {
+            String ran = Integer.toString(rand.nextInt(10));
+            randNum += ran;
+        }
+        return workerService.certifiedPhoneNumber(request,randNum);
     }
 
     // 회원정보수정을 위한 근무자 인력현황 정보 가져오기
