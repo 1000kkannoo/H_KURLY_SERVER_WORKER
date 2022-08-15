@@ -6,11 +6,6 @@ import lombok.*;
 
 import javax.validation.constraints.NotNull;
 
-@Getter
-@Setter
-@AllArgsConstructor
-
-@Builder
 public class WorkerDto {
 
     @Getter
@@ -18,8 +13,16 @@ public class WorkerDto {
     @AllArgsConstructor
     @NoArgsConstructor
     @Builder
+    public static class phoneNumRequest{
+        private String pnum;
+    }
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
     public static class idSearchRequest{
-        private String userId;
+        private String name;
         private String pnum;
     }
     @Getter
