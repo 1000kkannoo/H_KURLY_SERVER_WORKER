@@ -87,4 +87,12 @@ public class WorkerDto {
         }
     }
 
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    public static class deleteRequest{
+        private String pw;
+    }
 }
