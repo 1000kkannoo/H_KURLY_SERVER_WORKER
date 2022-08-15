@@ -132,7 +132,11 @@ public class WorkerService {
 
     // 회원정보수정을 위한 근무자 인력현황 정보 가져오기
     @Transactional
-    public List<Object> getUpdateWorker() {
+    public List<Object> getUpdateWorker(HttpServletRequest headerRequest) {
+
+        if (!tokenCredEntialsValidate(headerRequest))
+            return Collections.singletonList(StatusFalse.JWT_CREDENTIALS_STATUS_FALSE);
+
         Long a = getTokenInfo().getId();
         log.info(String.valueOf(a));
         return workerListRepository
@@ -144,7 +148,11 @@ public class WorkerService {
 
     // 근무자 인력현황 정보 및 근무자 정보 업데이트
     @Transactional
-    public Constable postUpdateWorker(WorkerListDto.updateRequest request) {
+    public Constable postUpdateWorker(WorkerListDto.updateRequest request, HttpServletRequest headerRequest) {
+
+        if (!tokenCredEntialsValidate(headerRequest))
+            return StatusFalse.JWT_CREDENTIALS_STATUS_FALSE;
+
         AuthorityWorker authority = AuthorityWorker.builder()
                 .authorityName("ROLE_USER")
                 .build();
@@ -197,7 +205,7 @@ public class WorkerService {
 
     @Transactional
     // 비밀번호 변경 (userId_아이디로 id 찾는부분)
-    public List<Object> getPwChangeUser(WorkerDto.pwChangeRequest request) {
+    public List<Object> getPwChangeWorker(WorkerDto.pwChangeRequest request) {
         if (workerRepository.findByUserId(request.getUserId()).orElse(null) == null) {
             throw new RuntimeException("해당 유저가 없습니다.");
         }
@@ -209,7 +217,7 @@ public class WorkerService {
     }
 
     // 비밀번호 변경 (변경하는 부분)
-    public Constable PwChangeUser(WorkerDto.pwChangeRequest request) {
+    public Constable PwChangeWorker(WorkerDto.pwChangeRequest request) {
 
         if (passwordEncoder.matches(request.getPw(), request.getOldPw())) // 입력한 비밀번호와 현재 비밀번호가 맞을 경우
         {
@@ -237,7 +245,11 @@ public class WorkerService {
     }
 
 
-    public Constable deleteWorker(WorkerDto.deleteRequest request) {
+    // 회원 탈퇴
+    public Constable deleteWorker(WorkerDto.deleteRequest request, HttpServletRequest headerRequest) {
+        if (!tokenCredEntialsValidate(headerRequest))
+            return StatusFalse.JWT_CREDENTIALS_STATUS_FALSE;
+
         if (passwordEncoder.matches(request.getPw(), getTokenInfo().getPw())) {
 
             Long id = getTokenInfo().getId();
@@ -249,5 +261,14 @@ public class WorkerService {
         } else {
             return StatusFalse.DELETE_STATUS_FALSE;
         }
+    }
+
+    public Constable logoutWorker(HttpServletRequest headerRequest) {
+        if (!tokenCredEntialsValidate(headerRequest))
+            return StatusFalse.JWT_CREDENTIALS_STATUS_FALSE;
+
+        String getToken = headerRequest.getHeader(AUTHORIZATION_HEADER);
+        tokenRepository.deleteById(getToken);
+        return StatusTrue.LOGOUT_STATUS_TRUE;
     }
 }

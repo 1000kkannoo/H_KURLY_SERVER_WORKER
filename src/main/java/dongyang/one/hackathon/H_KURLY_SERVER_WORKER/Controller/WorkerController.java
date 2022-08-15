@@ -6,6 +6,7 @@ import dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Dto.WorkerRegisterDto;
 import dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Service.WorkerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,6 +22,13 @@ import java.util.Random;
 @Slf4j
 public class WorkerController {
     private final WorkerService workerService;
+
+    // 로그아웃
+    @PostMapping("logout")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    public Constable logoutUser(HttpServletRequest headerRequest) {
+        return workerService.logoutWorker(headerRequest);
+    }
 
     // 회원가입
     @PostMapping("register")
@@ -47,15 +55,15 @@ public class WorkerController {
     // 회원정보수정을 위한 근무자 인력현황 정보 가져오기
     @GetMapping("edit")
     public List<Object> getUpdateUser(HttpServletRequest request) {
-        return workerService.getUpdateWorker();
+        return workerService.getUpdateWorker(request);
     }
 
     // 회원정보수정
     @PostMapping("edit")
     public Constable postUpdateUser(
-            @Valid @RequestBody final WorkerListDto.updateRequest request
+            @Valid @RequestBody final WorkerListDto.updateRequest request ,HttpServletRequest headerRequest
     ) {
-        return workerService.postUpdateWorker(request);
+        return workerService.postUpdateWorker(request,headerRequest);
     }
 
     // ID 찾기
@@ -71,7 +79,7 @@ public class WorkerController {
     public List<Object> pwSearchUser(
             @Valid @RequestBody final WorkerDto.pwChangeRequest request
     ) {
-        return workerService.getPwChangeUser(request);
+        return workerService.getPwChangeWorker(request);
     }
 
     // 비밀번호 변경
@@ -79,15 +87,15 @@ public class WorkerController {
     public Constable pwChangeUser(
             @Valid @RequestBody final WorkerDto.pwChangeRequest request
     ) {
-        return workerService.PwChangeUser(request);
+        return workerService.PwChangeWorker(request);
     }
 
     // 회원 탈퇴
     @PostMapping("delete")
     public Constable deleteUser(
-        @Valid @RequestBody final WorkerDto.deleteRequest request
+        @Valid @RequestBody final WorkerDto.deleteRequest request, HttpServletRequest headerRequest
     ){
-        return workerService.deleteWorker(request);
+        return workerService.deleteWorker(request,headerRequest);
     }
 
 }

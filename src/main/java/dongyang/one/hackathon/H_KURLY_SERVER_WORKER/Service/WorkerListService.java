@@ -2,6 +2,7 @@ package dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Service;
 
 import dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Dto.TokenInfoResponseDto;
 import dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Dto.WorkerListDto;
+import dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Model.StatusFalse;
 import dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Repository.TokenRepository;
 import dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Repository.WorkerListRepository;
 import dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Repository.WorkerRepository;
@@ -11,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -46,7 +48,13 @@ public class WorkerListService {
         return true;
     }
 
-    public List<Object> getWorkerList() {
+    // Service
+
+    // 근무자 근무리스트 조회
+    public List<Object> getWorkerList(HttpServletRequest headerRequest) {
+        if (!tokenCredEntialsValidate(headerRequest))
+            return Collections.singletonList(StatusFalse.JWT_CREDENTIALS_STATUS_FALSE);
+
         return workerListRepository
                 .findById(getTokenInfo().getId())
                 .stream()

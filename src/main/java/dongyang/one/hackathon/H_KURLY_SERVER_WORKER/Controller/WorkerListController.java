@@ -20,6 +20,6 @@ public class WorkerListController {
     // 근무자의 근무일지조회
     @GetMapping("list")
     public List<Object> getWorkerList(HttpServletRequest request) {
-        return workerListService.getWorkerList();
+        return workerListService.getWorkerList(request);
     }
 }
