@@ -193,4 +193,18 @@ public class WorkerService {
                 .map(WorkerDto.idSearchRepsonse::repsonse)
                 .collect(Collectors.toList());
     }
+
+    @Transactional
+    // 비밀번호 변경 (아이디로 비밀번호 찾는부분)
+    public List<Object> getPwChangeUser(WorkerDto.pwChangeRequest request) {
+        if (workerRepository.findByUserId(request.getUserId()).orElse(null) == null) {
+            throw new RuntimeException("해당 유저가 없습니다.");
+        }
+            return workerRepository.findByUserId(request.getUserId())
+                    .stream()
+                    .map(WorkerDto.pwResponse::pwResponse)
+                    .collect(Collectors.toList());
+    }
+    // 비밀번호 변경 (변경하는 부분)
+
 }
