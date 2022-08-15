@@ -25,6 +25,18 @@ public class WorkerDto {
         private String name;
         private String pnum;
     }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    public static class pwChangeRequest{
+        private String userId;
+        private String pw;
+        private String newPw;
+    }
+
     @Getter
     @Setter
     @AllArgsConstructor
@@ -32,9 +44,24 @@ public class WorkerDto {
     @Builder
     public static class idSearchRepsonse{
         private String userId;
+        private String pw;
         public static WorkerDto.idSearchRepsonse repsonse (@NotNull Worker worker){
             return idSearchRepsonse.builder()
                     .userId(worker.getUserId())
+                    .build();
+        }
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    public static class pwResponse{
+        private String pw;
+        public static WorkerDto.pwResponse pwResponse (@NotNull Worker worker){
+            return pwResponse.builder()
+                    .pw(worker.getPw())
                     .build();
         }
     }
