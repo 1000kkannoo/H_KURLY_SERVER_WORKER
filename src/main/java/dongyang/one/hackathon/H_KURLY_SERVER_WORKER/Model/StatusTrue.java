@@ -13,7 +13,8 @@ public enum StatusTrue {
     REGISTER_STATUS_TRUE(200, "회원가입 성공"),
     UPDATE_STATUS_TRUE(200, "업데이트 성공"),
     PASSWORD_CHANGE_STATUS_TRUE(200, "비밀번호 변경 성공"),
-    DELETE_STATUS_TRUE(200, "회원탈퇴 성공");
+    DELETE_STATUS_TRUE(200, "회원탈퇴 성공"),
+    LOGOUT_STATUS_TRUE(200, "로그아웃 성공" );
 
     private final Integer status;
     private final String statusMessage;
