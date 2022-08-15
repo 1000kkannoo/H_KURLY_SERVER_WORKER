@@ -1,6 +1,5 @@
 package dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Service;
 
-
 import dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Dto.TokenInfoResponseDto;
 import dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Dto.WorkerDto;
 import dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Dto.WorkerListDto;
@@ -16,15 +15,16 @@ import dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Repository.WorkerRepository;
 import dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.nurigo.java_sdk.api.Message;
+import net.nurigo.java_sdk.exceptions.CoolsmsException;
+import org.json.simple.JSONObject;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.constant.Constable;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Model.Model.AUTHORIZATION_HEADER;
@@ -62,6 +62,33 @@ public class WorkerService {
     }
 
     // Service
+
+    // 휴대폰 인증
+    public Map<Object, Object> certifiedPhoneNumber(WorkerDto.phoneNumRequest phoneNumber, String randNum) {
+
+        String api_key = "NCSBDTMXRMDGUIFD";
+        String api_secret = "S917YGKP2H2IFYE0P9ONJBTFA2EDCV3J";
+        Message coolsms = new Message(api_key, api_secret);
+
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("to", phoneNumber.getPnum());
+        params.put("from", "010-4345-4377");
+        params.put("type", "SMS");
+        params.put("text", "마켓컬리 근무자 앱 휴대폰인증 : 인증번호는" + "[" + randNum + "]" + "입니다.");
+        params.put("app_version", "test app 1.2");
+
+        try {
+            JSONObject obj = (JSONObject) coolsms.send(params);
+            System.out.println(obj.toString());
+        } catch (CoolsmsException e) {
+            System.out.println(e.getMessage());
+            System.out.println(e.getCode());
+        }
+
+        Map<Object, Object> send = new HashMap<>();
+        send.put("randNum", randNum);
+        return send;
+    }
 
     // 회원가입
     @Transactional
@@ -161,7 +188,7 @@ public class WorkerService {
     // id 찾기
     @Transactional
     public List<Object> idSearch(WorkerDto.idSearchRequest request) {
-        return workerRepository.findByUserIdAndPnum(request.getUserId(),request.getPnum())
+        return workerRepository.findByNameAndPnum(request.getName(), request.getPnum())
                 .stream()
                 .map(WorkerDto.idSearchRepsonse::repsonse)
                 .collect(Collectors.toList());
