@@ -202,16 +202,16 @@ public class WorkerService {
             throw new RuntimeException("해당 유저가 없습니다.");
         }
         log.info(request.getUserId());
-            return workerRepository.findByUserId(request.getUserId())
-                    .stream()
-                    .map(WorkerDto.pwResponse::pwResponse)
-                    .collect(Collectors.toList());
+        return workerRepository.findByUserId(request.getUserId())
+                .stream()
+                .map(WorkerDto.pwResponse::pwResponse)
+                .collect(Collectors.toList());
     }
 
     // 비밀번호 변경 (변경하는 부분)
     public Constable PwChangeUser(WorkerDto.pwChangeRequest request) {
 
-        if(passwordEncoder.matches(request.getPw(), request.getOldPw())) // 입력한 비밀번호와 현재 비밀번호가 맞을 경우
+        if (passwordEncoder.matches(request.getPw(), request.getOldPw())) // 입력한 비밀번호와 현재 비밀번호가 맞을 경우
         {
             AuthorityWorker authority = AuthorityWorker.builder()
                     .authorityName("ROLE_USER")
@@ -231,12 +231,23 @@ public class WorkerService {
             );
 
             return StatusTrue.PASSWORD_CHANGE_STATUS_TRUE;
-        }
-        else {
+        } else {
             return StatusFalse.PASSWORD_CHANGE_STATUS_FALSE;
         }
     }
 
 
+    public Constable deleteWorker(WorkerDto.deleteRequest request) {
+        if (passwordEncoder.matches(request.getPw(), getTokenInfo().getPw())) {
 
+            Long id = getTokenInfo().getId();
+
+            workerRepository.deleteById(id);
+            workerListRepository.deleteById(id);
+
+            return StatusTrue.DELETE_STATUS_TRUE;
+        } else {
+            return StatusFalse.DELETE_STATUS_FALSE;
+        }
+    }
 }
