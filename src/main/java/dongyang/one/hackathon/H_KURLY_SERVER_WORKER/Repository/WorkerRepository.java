@@ -12,5 +12,5 @@ public interface WorkerRepository extends JpaRepository<Worker, Long> {
     @EntityGraph(attributePaths = "authorities")
     Optional<Worker> findOneWithAuthoritiesByUserId(String userId);
 
-    List<Worker> findByUserIdAndPnum(String userId, String pnum);
+    List<Worker> findByNameAndPnum(String name, String pnum);
 }
