@@ -147,4 +147,23 @@ public class WorkerListService {
         );
         return StatusTrue.CON_CHECK_STATUS_TRUE;
     }
+
+    public Constable startWorker(HttpServletRequest headerRequest) {
+        if (!tokenCredEntialsValidate(headerRequest))
+            return StatusFalse.JWT_CREDENTIALS_STATUS_FALSE;
+
+        if (getListTokenInfo().getArrangement() == 'Y') {
+            recordRepository.save(
+                    Record.builder()
+                            .idx(getTokenInfo().getId())
+                            .workPlace(getListTokenInfo().getWorkPlace())
+                            .workType(getListTokenInfo().getWorkTime())
+                            .build()
+            );
+
+            return StatusTrue.START_WORK;
+        }
+        else
+            return StatusFalse.START_FAILURE;
+    }
 }
