@@ -21,9 +21,6 @@ public class Notice {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @NotNull
-    private Long idx;
     @NotNull
     private String title;
     @NotNull
