@@ -32,4 +32,20 @@ public class WorkerListController {
     ) {
         return workerListService.choiceWorkerList(request, headerRequest);
     }
+
+    // 교육 수행
+    @PostMapping("list/edu")
+    public Constable eduWorker(
+            @Valid @RequestBody WorkerListDto.eduRequest request, HttpServletRequest headerRequest
+    ) {
+        return workerListService.eduWorker(request, headerRequest);
+    }
+
+    // 근로 계약
+    @PostMapping("list/con")
+    public Constable conWorker(
+            @Valid @RequestBody WorkerListDto.conRequest request, HttpServletRequest headerRequest
+    ) {
+        return workerListService.conWorker(request, headerRequest);
+    }
 }
