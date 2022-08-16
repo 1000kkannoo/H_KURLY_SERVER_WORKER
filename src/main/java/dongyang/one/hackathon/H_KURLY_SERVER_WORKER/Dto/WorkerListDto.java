@@ -43,15 +43,6 @@ public class WorkerListDto {
     @NoArgsConstructor
     @Builder
     public static class updateRequest{
-        private String workTime;
-        private String workPlace;
-        private String workType;
-        private String workDay;
-        private Boolean con;
-        private Boolean edu;
-        private Character arrangement;
-        private Integer wscore;
-        private Integer wcnt;
         private String pnum;
     }
 

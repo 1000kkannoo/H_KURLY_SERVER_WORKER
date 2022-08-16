@@ -52,18 +52,12 @@ public class WorkerController {
         return workerService.certifiedPhoneNumber(request,randNum);
     }
 
-    // 회원정보수정을 위한 근무자 인력현황 정보 가져오기
-    @GetMapping("edit")
-    public List<Object> getUpdateUser(HttpServletRequest request) {
-        return workerService.getUpdateWorker(request);
-    }
-
-    // 회원정보수정
+    // 회원정보수정 (전화번호 수정)
     @PostMapping("edit")
     public Constable postUpdateUser(
             @Valid @RequestBody final WorkerListDto.updateRequest request ,HttpServletRequest headerRequest
     ) {
-        return workerService.postUpdateWorker(request,headerRequest);
+        return workerService.updateWorker(request,headerRequest);
     }
 
     // ID 찾기
@@ -72,14 +66,6 @@ public class WorkerController {
             @Valid @RequestBody final WorkerDto.idSearchRequest request
     ) {
         return workerService.idSearch(request);
-    }
-
-    // 비밀번호 변경을 위한 정보 가져오기
-    @PostMapping("searchpw")
-    public List<Object> pwSearchUser(
-            @Valid @RequestBody final WorkerDto.pwChangeRequest request
-    ) {
-        return workerService.getPwChangeWorker(request);
     }
 
     // 비밀번호 변경

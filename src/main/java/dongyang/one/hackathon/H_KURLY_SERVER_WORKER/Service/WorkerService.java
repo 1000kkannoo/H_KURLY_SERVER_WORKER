@@ -1,9 +1,6 @@
 package dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Service;
 
-import dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Dto.TokenInfoResponseDto;
-import dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Dto.WorkerDto;
-import dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Dto.WorkerListDto;
-import dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Dto.WorkerRegisterDto;
+import dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Dto.*;
 import dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Entity.AuthorityWorker;
 import dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Entity.Worker;
 import dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Entity.WorkerList;
@@ -62,6 +59,15 @@ public class WorkerService {
         return true;
     }
 
+    private ListTokenInfoResponseDto getListTokenInfo() {
+        return ListTokenInfoResponseDto.Response(
+                Objects.requireNonNull(SecurityUtil.getCurrentUsername()
+                        .flatMap(
+                                workerListRepository::findOneByUserId)
+                        .orElse(null))
+        );
+    }
+
     // Service
 
     // 휴대폰 인증
@@ -117,46 +123,27 @@ public class WorkerService {
         // 근무자 인력현황 정보 등록
         workerListRepository.save(
                 WorkerList.builder()
+                        .userId(request.getUserId())
                         .con(false)
                         .edu(false)
                         .arrangement('N')
                         .wscore(100)
                         .wcnt(0)
-                        .userId(request.getUserId())
                         .build()
         );
 
         return StatusTrue.REGISTER_STATUS_TRUE;
     }
 
-    // 회원정보수정을 위한 근무자 인력현황 정보 가져오기
+    // 근무자 정보 업데이트
     @Transactional
-    public List<Object> getUpdateWorker(HttpServletRequest headerRequest) {
-
-        if (!tokenCredEntialsValidate(headerRequest))
-            return Collections.singletonList(StatusFalse.JWT_CREDENTIALS_STATUS_FALSE);
-
-        Long a = getTokenInfo().getId();
-        log.info(String.valueOf(a));
-        return workerListRepository
-                .findById(getTokenInfo().getId())
-                .stream()
-                .map(WorkerListDto.WorkerListResponse::Response)
-                .collect(Collectors.toList());
-    }
-
-    // 근무자 인력현황 정보 및 근무자 정보 업데이트
-    @Transactional
-    public Constable postUpdateWorker(WorkerListDto.updateRequest request, HttpServletRequest headerRequest) {
-
+    public Constable updateWorker(WorkerListDto.updateRequest request, HttpServletRequest headerRequest) {
         if (!tokenCredEntialsValidate(headerRequest))
             return StatusFalse.JWT_CREDENTIALS_STATUS_FALSE;
 
         AuthorityWorker authority = AuthorityWorker.builder()
                 .authorityName("ROLE_USER")
                 .build();
-
-        log.info(getTokenInfo().getPw());
 
         // 근무자 정보 업데이트
         workerRepository.save(
@@ -171,24 +158,6 @@ public class WorkerService {
                         .authorities(Collections.singleton(authority))
                         .build()
         );
-
-        // 근무자 인력현황 정보 업데이트
-        workerListRepository.save(
-                WorkerList.builder()
-                        .id(getTokenInfo().getId())
-                        .workDay(request.getWorkDay())
-                        .workPlace(request.getWorkPlace())
-                        .workTime(request.getWorkTime())
-                        .workType(request.getWorkType())
-                        .con(request.getCon())
-                        .edu(request.getEdu())
-                        .arrangement(request.getArrangement())
-                        .wscore(request.getWscore())
-                        .wcnt(request.getWcnt())
-                        .userId(getTokenInfo().getUserId())
-                        .build()
-        );
-
         return StatusTrue.UPDATE_STATUS_TRUE;
     }
 
@@ -201,23 +170,24 @@ public class WorkerService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional
-    // 비밀번호 변경 (userId_아이디로 id 찾는부분)
-    public List<Object> getPwChangeWorker(WorkerDto.pwChangeRequest request) {
-        if (workerRepository.findByUserId(request.getUserId()).orElse(null) == null) {
-            throw new RuntimeException("해당 유저가 없습니다.");
-        }
-        log.info(request.getUserId());
-        return workerRepository.findByUserId(request.getUserId())
-                .stream()
-                .map(WorkerDto.pwResponse::pwResponse)
-                .collect(Collectors.toList());
-    }
 
     // 비밀번호 변경 (변경하는 부분)
     public Constable PwChangeWorker(WorkerDto.pwChangeRequest request) {
 
-        if (passwordEncoder.matches(request.getPw(), request.getOldPw())) // 입력한 비밀번호와 현재 비밀번호가 맞을 경우
+        if (workerRepository.findByUserId(request.getUserId()).orElse(null) == null) {
+            throw new RuntimeException("해당 유저가 없습니다.");
+        }
+
+        Optional<String> userId = Optional.of(request.getUserId());
+
+        TokenInfoResponseDto getUserInfo = TokenInfoResponseDto.Response(
+                Objects.requireNonNull(userId
+                        .flatMap(
+                                workerRepository::findByUserId)
+                        .orElse(null))
+        );
+
+        if (passwordEncoder.matches(request.getPw(), getUserInfo.getPw())) // 입력한 비밀번호와 현재 비밀번호가 맞을 경우
         {
             AuthorityWorker authority = AuthorityWorker.builder()
                     .authorityName("ROLE_USER")
@@ -225,13 +195,13 @@ public class WorkerService {
 
             workerRepository.save(
                     Worker.builder()
-                            .id(request.getId())
-                            .userId(request.getUserId())
+                            .id(getUserInfo.getId())
+                            .userId(getUserInfo.getUserId())
                             .pw(passwordEncoder.encode(request.getNewPw()))
-                            .name(request.getName())
-                            .pnum(request.getPnum())
-                            .gender(request.getGender())
-                            .hnum(request.getHnum())
+                            .name(getUserInfo.getName())
+                            .pnum(getUserInfo.getPnum())
+                            .gender(getUserInfo.getGender())
+                            .hnum(getUserInfo.getHnum())
                             .authorities(Collections.singleton(authority))
                             .build()
             );

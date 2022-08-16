@@ -35,15 +35,10 @@ public class WorkerDto {
     @NoArgsConstructor
     @Builder
     public static class pwChangeRequest{
-        private Long id;
-        private String name;
-        private String pnum;
         private String userId;
         private String pw;
         private String oldPw;
         private String newPw;
-        private Character gender;
-        private String hnum;
     }
 
     @Getter
