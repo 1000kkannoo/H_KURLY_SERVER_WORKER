@@ -59,7 +59,13 @@ public class WorkerListDto {
         private String workTime;
         private String workPlace;
         private String workDay;
-
+        public static WorkerListDto.choiceRequest Response(@NotNull WorkerList workerList){
+            return WorkerListDto.choiceRequest.builder()
+                    .workTime(workerList.getWorkTime())
+                    .workPlace(workerList.getWorkPlace())
+                    .workDay(workerList.getWorkDay())
+                    .build();
+        }
     }
 
     // 교육확인

@@ -25,7 +25,6 @@ public class RecordDto {
     private String workType;
     private Integer wcnt;
 
-
     public static RecordDto Response(@NotNull Record record) {
         return RecordDto.builder()
                 .id(record.getId())
@@ -36,5 +35,25 @@ public class RecordDto {
                 .end(record.getEnd())
                 .wcnt(record.getWcnt())
                 .build();
+    }
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    public static class RecordResponse{
+        private LocalDateTime start;
+        private LocalDateTime end;
+        private String workPlace;
+        private String workType;
+
+        public static RecordDto.RecordResponse recordResponse(@NotNull Record record){
+            return RecordResponse.builder()
+                    .start(record.getStart())
+                    .end(record.getEnd())
+                    .workPlace(record.getWorkPlace())
+                    .workType(record.getWorkType())
+                    .build();
+        }
     }
 }
