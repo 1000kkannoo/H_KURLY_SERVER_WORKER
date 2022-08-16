@@ -3,9 +3,11 @@ package dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Service;
 import dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Dto.ListTokenInfoResponseDto;
 import dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Dto.TokenInfoResponseDto;
 import dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Dto.WorkerListDto;
+import dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Entity.Record;
 import dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Entity.WorkerList;
 import dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Model.StatusFalse;
 import dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Model.StatusTrue;
+import dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Repository.RecordRepository;
 import dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Repository.TokenRepository;
 import dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Repository.WorkerListRepository;
 import dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Repository.WorkerRepository;
@@ -19,7 +21,6 @@ import java.lang.constant.Constable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Model.Model.AUTHORIZATION_HEADER;
@@ -33,6 +34,8 @@ public class WorkerListService {
     private final TokenRepository tokenRepository;
 
     private final WorkerRepository workerRepository;
+
+    private final RecordRepository recordRepository;
 
     // validate 및 단순 메소드화
 
@@ -76,6 +79,7 @@ public class WorkerListService {
                 .collect(Collectors.toList());
     }
 
+    // 근무자 업무선택
     public Constable choiceWorkerList(WorkerListDto.choiceRequest request, HttpServletRequest headerRequest) {
         if (!tokenCredEntialsValidate(headerRequest))
             return StatusFalse.JWT_CREDENTIALS_STATUS_FALSE;
@@ -83,6 +87,7 @@ public class WorkerListService {
         workerListRepository.save(
                 WorkerList.builder()
                         .id(getTokenInfo().getId())
+                        .userId(getTokenInfo().getUserId())
                         .workDay(request.getWorkDay())
                         .workPlace(request.getWorkPlace())
                         .workTime(request.getWorkTime())
@@ -95,5 +100,51 @@ public class WorkerListService {
                         .build()
         );
         return StatusTrue.WORK_CHOICE_STATUS_TRUE;
+    }
+
+    // 근무자 교육 수행
+    public Constable eduWorker(WorkerListDto.eduRequest request, HttpServletRequest headerRequest) {
+        if (!tokenCredEntialsValidate(headerRequest))
+            return StatusFalse.JWT_CREDENTIALS_STATUS_FALSE;
+
+        workerListRepository.save(
+                WorkerList.builder()
+                        .id(getTokenInfo().getId())
+                        .userId(getTokenInfo().getUserId())
+                        .workDay(getListTokenInfo().getWorkDay())
+                        .workPlace(getListTokenInfo().getWorkPlace())
+                        .workTime(getListTokenInfo().getWorkTime())
+                        .workType(getListTokenInfo().getWorkType())
+                        .con(getListTokenInfo().getCon())
+                        .edu(request.getEdu())
+                        .arrangement(getListTokenInfo().getArrangement())
+                        .wscore(getListTokenInfo().getWscore())
+                        .wcnt(getListTokenInfo().getWcnt())
+                        .build()
+        );
+        return StatusTrue.EDU_CHECK_STATUS_TRUE;
+    }
+
+    // 근무자 근로 계약 수행
+    public Constable conWorker(WorkerListDto.conRequest request, HttpServletRequest headerRequest) {
+        if (!tokenCredEntialsValidate(headerRequest))
+            return StatusFalse.JWT_CREDENTIALS_STATUS_FALSE;
+
+        workerListRepository.save(
+                WorkerList.builder()
+                        .id(getTokenInfo().getId())
+                        .userId(getTokenInfo().getUserId())
+                        .workDay(getListTokenInfo().getWorkDay())
+                        .workPlace(getListTokenInfo().getWorkPlace())
+                        .workTime(getListTokenInfo().getWorkTime())
+                        .workType(getListTokenInfo().getWorkType())
+                        .con(request.getCon())
+                        .edu(getListTokenInfo().getEdu())
+                        .arrangement(getListTokenInfo().getArrangement())
+                        .wscore(getListTokenInfo().getWscore())
+                        .wcnt(getListTokenInfo().getWcnt())
+                        .build()
+        );
+        return StatusTrue.CON_CHECK_STATUS_TRUE;
     }
 }
