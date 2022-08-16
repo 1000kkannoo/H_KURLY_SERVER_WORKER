@@ -8,4 +8,6 @@ import java.util.Optional;
 
 public interface RecordRepository extends JpaRepository<Record,Long> {
     Optional<Record> findByIdxAndWcnt(Long idx, Integer wcnt);
+
+    List<Record> findAllByIdx(Long idx);
 }
