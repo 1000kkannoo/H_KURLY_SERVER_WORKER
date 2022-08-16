@@ -1,6 +1,8 @@
 package dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Entity;
 
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
@@ -24,8 +26,10 @@ public class Record {
     @NotNull
     private Long idx;
 
+    @CreatedDate
     private LocalDateTime start;
 
+    @LastModifiedDate
     private LocalDateTime end;
 
     private String workPlace;
