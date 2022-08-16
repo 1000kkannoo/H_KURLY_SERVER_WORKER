@@ -3,7 +3,6 @@ package dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Service;
 import dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Dto.NoticeDto;
 import dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Dto.TokenInfoResponseDto;
 import dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Entity.Notice;
-import dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Entity.WorkerList;
 import dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Model.StatusFalse;
 import dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Model.StatusTrue;
 import dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Repository.NoticeRepository;
@@ -64,4 +63,12 @@ public class NoticeService {
         );
         return StatusTrue.NOTICE_ADD_STATUS_TRUE;
     }
+
+    public Object readNotice(HttpServletRequest headerRequest) {
+        if (!tokenCredEntialsValidate(headerRequest))
+            return StatusFalse.JWT_CREDENTIALS_STATUS_FALSE;
+
+        return noticeRepository.findAll();
+    }
+
 }
