@@ -55,4 +55,11 @@ public class WorkerListController {
     {
         return workerListService.startWorker(headerRequest);
     }
+
+    //퇴근
+    @PostMapping("list/end")
+    public Constable endWorker(HttpServletRequest headerRequest)
+    {
+        return workerListService.endWorker(headerRequest);
+    }
 }
