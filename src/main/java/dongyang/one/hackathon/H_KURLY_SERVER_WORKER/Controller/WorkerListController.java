@@ -62,4 +62,16 @@ public class WorkerListController {
     {
         return workerListService.endWorker(headerRequest);
     }
+
+    @GetMapping("list/working")
+    public List<Object> WorkingInfo(HttpServletRequest headerRequest)
+    {
+        return workerListService.WorkingInfo(headerRequest);
+    }
+
+    @GetMapping("list/worked")
+    public List<Object> WorkedInfo(HttpServletRequest headerRequest)
+    {
+        return workerListService.WorkedInfo(headerRequest);
+    }
 }
