@@ -1,6 +1,7 @@
 package dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Service;
 
 import dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Dto.ListTokenInfoResponseDto;
+import dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Dto.RecordDto;
 import dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Dto.TokenInfoResponseDto;
 import dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Dto.WorkerListDto;
 import dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Entity.Record;
@@ -21,6 +22,7 @@ import java.lang.constant.Constable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Model.Model.AUTHORIZATION_HEADER;
@@ -84,6 +86,13 @@ public class WorkerListService {
         if (!tokenCredEntialsValidate(headerRequest))
             return StatusFalse.JWT_CREDENTIALS_STATUS_FALSE;
 
+        if (
+                !getListTokenInfo().getEdu()
+                        || !getListTokenInfo().getCon()
+        ) {
+            return StatusFalse.ERROR_CHOICE;
+        }
+
         workerListRepository.save(
                 WorkerList.builder()
                         .id(getTokenInfo().getId())
@@ -94,7 +103,7 @@ public class WorkerListService {
                         .workType(getListTokenInfo().getWorkType())
                         .con(getListTokenInfo().getCon())
                         .edu(getListTokenInfo().getEdu())
-                        .arrangement(getListTokenInfo().getArrangement())
+                        .arrangement('W')
                         .wscore(getListTokenInfo().getWscore())
                         .wcnt(getListTokenInfo().getWcnt())
                         .build()
@@ -129,7 +138,6 @@ public class WorkerListService {
     public Constable conWorker(WorkerListDto.conRequest request, HttpServletRequest headerRequest) {
         if (!tokenCredEntialsValidate(headerRequest))
             return StatusFalse.JWT_CREDENTIALS_STATUS_FALSE;
-
         workerListRepository.save(
                 WorkerList.builder()
                         .id(getTokenInfo().getId())
@@ -148,6 +156,7 @@ public class WorkerListService {
         return StatusTrue.CON_CHECK_STATUS_TRUE;
     }
 
+    // 출근
     public Constable startWorker(HttpServletRequest headerRequest) {
         if (!tokenCredEntialsValidate(headerRequest))
             return StatusFalse.JWT_CREDENTIALS_STATUS_FALSE;
@@ -158,12 +167,64 @@ public class WorkerListService {
                             .idx(getTokenInfo().getId())
                             .workPlace(getListTokenInfo().getWorkPlace())
                             .workType(getListTokenInfo().getWorkTime())
+                            .wcnt(getListTokenInfo().getWcnt())
                             .build()
             );
 
             return StatusTrue.START_WORK;
-        }
-        else
+        } else
             return StatusFalse.START_FAILURE;
+    }
+
+    // 퇴근
+    public Constable endWorker(HttpServletRequest headerRequest) {
+
+        if (!tokenCredEntialsValidate(headerRequest))
+            return StatusFalse.JWT_CREDENTIALS_STATUS_FALSE;
+
+        Optional<Long> id = Optional.of(recordRepository
+                .findByIdxAndWcnt(getTokenInfo().getId(), getListTokenInfo().getWcnt())
+                .get()
+                .getId());
+
+        RecordDto getRecordInfo = RecordDto.Response(
+                Objects.requireNonNull(id
+                        .flatMap(
+                                recordRepository::findById)
+                        .orElse(null))
+        );
+
+
+        if (getListTokenInfo().getArrangement() == 'Y' && getRecordInfo.getStart() != null) {
+
+            recordRepository.save(
+                    Record.builder()
+                            .id(getRecordInfo.getId())
+                            .idx(getTokenInfo().getId())
+                            .workPlace(getListTokenInfo().getWorkPlace())
+                            .workType(getListTokenInfo().getWorkTime())
+                            .start(getRecordInfo.getStart())
+                            .wcnt(getRecordInfo.getWcnt())
+                            .build()
+            );
+
+            workerListRepository.save(
+                    WorkerList.builder()
+                            .id(getTokenInfo().getId())
+                            .userId(getTokenInfo().getUserId())
+                            .workDay(null)
+                            .workPlace(null)
+                            .workTime(null)
+                            .workType(null)
+                            .con(false)
+                            .edu(false)
+                            .arrangement('N')
+                            .wscore(getListTokenInfo().getWscore())
+                            .wcnt(getListTokenInfo().getWcnt() + 1)
+                            .build()
+            );
+            return StatusTrue.END_WORK;
+        }
+        return StatusFalse.END_FAILURE;
     }
 }
