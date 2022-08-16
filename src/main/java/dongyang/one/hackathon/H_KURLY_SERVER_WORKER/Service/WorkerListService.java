@@ -58,7 +58,7 @@ public class WorkerListService {
         return workerListRepository
                 .findById(getTokenInfo().getId())
                 .stream()
-                .map(WorkerListDto::Response)
+                .map(WorkerListDto.WorkerListResponse::Response)
                 .collect(Collectors.toList());
     }
 }

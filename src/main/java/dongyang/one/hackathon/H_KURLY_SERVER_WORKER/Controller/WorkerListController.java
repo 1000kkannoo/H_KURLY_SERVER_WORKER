@@ -4,6 +4,7 @@ import dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Service.WorkerListService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,9 +18,15 @@ import java.util.List;
 public class WorkerListController {
 
     private final WorkerListService workerListService;
-    // 근무자의 근무일지조회
+    // 근무자의 근무리스트 조회
     @GetMapping("list")
     public List<Object> getWorkerList(HttpServletRequest request) {
         return workerListService.getWorkerList(request);
     }
+
+    // 업무 신청
+//    @PostMapping("list/choice")
+//    public List<Object> choiceWorkerList(HttpServletRequest request) {
+//        return workerListService.choiceWorkerList(request);
+//    }
 }
