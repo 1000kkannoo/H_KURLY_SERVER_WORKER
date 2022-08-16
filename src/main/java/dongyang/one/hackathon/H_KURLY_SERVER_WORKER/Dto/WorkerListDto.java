@@ -6,7 +6,9 @@ import lombok.*;
 import javax.validation.constraints.NotNull;
 
 
+
 public class WorkerListDto {
+
     @Getter
     @Setter
     @AllArgsConstructor
@@ -37,6 +39,7 @@ public class WorkerListDto {
         }
     }
 
+    // 업데이트
     @Getter
     @Setter
     @AllArgsConstructor
@@ -46,6 +49,7 @@ public class WorkerListDto {
         private String pnum;
     }
 
+    // 업무 선택
     @Getter
     @Setter
     @AllArgsConstructor
@@ -56,5 +60,25 @@ public class WorkerListDto {
         private String workPlace;
         private String workDay;
 
+    }
+
+    // 교육확인
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    public static class eduRequest{
+        private Boolean edu;
+    }
+
+    // 교육확인
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    public static class conRequest{
+        private Boolean con;
     }
 }
