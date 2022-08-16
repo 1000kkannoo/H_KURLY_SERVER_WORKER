@@ -19,6 +19,8 @@ public class WorkerList {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String userId;
+
     private String workTime;
 
     private String workPlace;
@@ -39,13 +41,5 @@ public class WorkerList {
 
     @NotNull
     private Integer wcnt;
-
-    // 논리적 설계의 FK ( 이름 )
-    @NotNull
-    private String name;
-
-    // 논리적 설계의 FK ( 전화번호 )
-    @NotNull
-    private String pnum;
 
 }

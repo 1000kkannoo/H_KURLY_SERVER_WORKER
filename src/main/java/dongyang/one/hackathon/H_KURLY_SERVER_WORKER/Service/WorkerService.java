@@ -122,8 +122,7 @@ public class WorkerService {
                         .arrangement('N')
                         .wscore(100)
                         .wcnt(0)
-                        .name(request.getName())
-                        .pnum(request.getPnum())
+                        .userId(request.getUserId())
                         .build()
         );
 
@@ -186,8 +185,7 @@ public class WorkerService {
                         .arrangement(request.getArrangement())
                         .wscore(request.getWscore())
                         .wcnt(request.getWcnt())
-                        .name(getTokenInfo().getName())
-                        .pnum(request.getPnum())
+                        .userId(getTokenInfo().getUserId())
                         .build()
         );
 

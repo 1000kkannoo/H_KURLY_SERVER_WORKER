@@ -22,8 +22,6 @@ public class WorkerListDto {
         private Character arrangement;
         private Integer wscore;
         private Integer wcnt;
-        private String name;
-        private String pnum;
         public static WorkerListDto.WorkerListResponse Response(@NotNull WorkerList workerList) {
             return WorkerListDto.WorkerListResponse.builder()
                     .workTime(workerList.getWorkTime())
@@ -35,8 +33,6 @@ public class WorkerListDto {
                     .arrangement(workerList.getArrangement())
                     .wscore(workerList.getWscore())
                     .wcnt(workerList.getWcnt())
-                    .name(workerList.getName())
-                    .pnum(workerList.getPnum())
                     .build();
         }
     }
@@ -67,13 +63,7 @@ public class WorkerListDto {
     public static class choiceRequest{
         private String workTime;
         private String workPlace;
-        private String workType;
         private String workDay;
-        private Boolean con;
-        private Boolean edu;
-        private Character arrangement;
-        private Integer wscore;
-        private Integer wcnt;
-        private String pnum;
+
     }
 }
