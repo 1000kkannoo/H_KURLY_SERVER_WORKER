@@ -48,4 +48,11 @@ public class WorkerListController {
     ) {
         return workerListService.conWorker(request, headerRequest);
     }
+
+    // 출근
+    @PostMapping("list/start")
+    public Constable startWorker(HttpServletRequest headerRequest)
+    {
+        return workerListService.startWorker(headerRequest);
+    }
 }
