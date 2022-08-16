@@ -35,4 +35,6 @@ public class Record {
     private String workPlace;
 
     private String workType;
+
+    private Integer wcnt;
 }
