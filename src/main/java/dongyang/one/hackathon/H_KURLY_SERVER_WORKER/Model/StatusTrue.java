@@ -18,7 +18,8 @@ public enum StatusTrue {
     WORK_CHOICE_STATUS_TRUE(200, "업무 신청 성공" ),
     EDU_CHECK_STATUS_TRUE(200, "교육 수행 성공" ),
     CON_CHECK_STATUS_TRUE(200, "근로 계약 성공" ),
-    START_WORK(200, "출근 완료" );
+    START_WORK(200, "출근 완료" ),
+    END_WORK(200, "퇴근 완료" );
 
     private final Integer status;
     private final String statusMessage;
