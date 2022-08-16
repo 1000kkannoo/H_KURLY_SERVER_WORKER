@@ -19,10 +19,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.constant.Constable;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static dongyang.one.hackathon.H_KURLY_SERVER_WORKER.Model.Model.AUTHORIZATION_HEADER;
@@ -178,7 +175,6 @@ public class WorkerListService {
 
     // 퇴근
     public Constable endWorker(HttpServletRequest headerRequest) {
-
         if (!tokenCredEntialsValidate(headerRequest))
             return StatusFalse.JWT_CREDENTIALS_STATUS_FALSE;
 
@@ -208,6 +204,7 @@ public class WorkerListService {
                             .build()
             );
 
+            // 퇴근 시 근무상태 초기화
             workerListRepository.save(
                     WorkerList.builder()
                             .id(getTokenInfo().getId())
@@ -226,5 +223,29 @@ public class WorkerListService {
             return StatusTrue.END_WORK;
         }
         return StatusFalse.END_FAILURE;
+    }
+
+    // 현재 신청중인 내역 조회
+    public List<Object> WorkingInfo(HttpServletRequest headerRequest) {
+        if (!tokenCredEntialsValidate(headerRequest))
+            return Collections.singletonList(StatusFalse.JWT_CREDENTIALS_STATUS_FALSE);
+
+        return workerListRepository
+                .findById(getTokenInfo().getId())
+                .stream()
+                .map(WorkerListDto.choiceRequest::Response)
+                .collect(Collectors.toList());
+    }
+
+    // 과거 근무 내역 조회
+    public List<Object> WorkedInfo(HttpServletRequest headerRequest) {
+        if (!tokenCredEntialsValidate(headerRequest))
+            return Collections.singletonList(StatusFalse.JWT_CREDENTIALS_STATUS_FALSE);
+
+        return recordRepository
+                .findAllByIdx(getTokenInfo().getId())
+                .stream()
+                .map(RecordDto.RecordResponse::recordResponse)
+                .collect(Collectors.toList());
     }
 }
