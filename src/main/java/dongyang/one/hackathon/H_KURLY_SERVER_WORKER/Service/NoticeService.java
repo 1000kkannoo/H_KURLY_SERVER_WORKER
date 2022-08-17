@@ -51,6 +51,7 @@ public class NoticeService {
 
     // Service
 
+    // 공지사항 등록
     public Constable addNotice(NoticeDto.addNoticeRequest request, HttpServletRequest headerRequest) {
         if (!tokenCredEntialsValidate(headerRequest))
             return StatusFalse.JWT_CREDENTIALS_STATUS_FALSE;
@@ -64,6 +65,7 @@ public class NoticeService {
         return StatusTrue.NOTICE_ADD_STATUS_TRUE;
     }
 
+    // 공지사항 조회
     public Object readNotice(HttpServletRequest headerRequest) {
         if (!tokenCredEntialsValidate(headerRequest))
             return StatusFalse.JWT_CREDENTIALS_STATUS_FALSE;
@@ -71,6 +73,7 @@ public class NoticeService {
         return noticeRepository.findAll();
     }
 
+    // 공지사항 수정
     public Constable updateNotice(NoticeDto.updateNoticeRequest request, HttpServletRequest headerRequest) {
         if (!tokenCredEntialsValidate(headerRequest))
             return StatusFalse.JWT_CREDENTIALS_STATUS_FALSE;
@@ -85,6 +88,7 @@ public class NoticeService {
         return StatusTrue.UPDATE_ADD_STATUS_TRUE;
     }
 
+    // 공지사항 삭제
     public Constable deleteNotice(NoticeDto.deleteNoticeRequest request, HttpServletRequest headerRequest) {
         if (!tokenCredEntialsValidate(headerRequest))
             return StatusFalse.JWT_CREDENTIALS_STATUS_FALSE;

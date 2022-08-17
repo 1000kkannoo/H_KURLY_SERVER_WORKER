@@ -9,6 +9,7 @@ import javax.validation.constraints.NotNull;
 
 public class WorkerListDto {
 
+    // 근무리스트 조회
     @Getter
     @Setter
     @AllArgsConstructor
