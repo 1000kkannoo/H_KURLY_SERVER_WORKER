@@ -21,7 +21,9 @@ public enum StatusTrue {
     START_WORK(200, "출근 완료" ),
     END_WORK(200, "퇴근 완료" ),
 
-    NOTICE_ADD_STATUS_TRUE(200, "공지사항 등록 성공" );
+    NOTICE_ADD_STATUS_TRUE(200, "공지사항 등록 성공" ),
+    UPDATE_ADD_STATUS_TRUE(200, "공지사항 수정 성공" ),
+    DELETE_ADD_STATUS_TRUE(200, "공지사항 삭제 성공" );
 
     private final Integer status;
     private final String statusMessage;
