@@ -71,4 +71,25 @@ public class NoticeService {
         return noticeRepository.findAll();
     }
 
+    public Constable updateNotice(NoticeDto.updateNoticeRequest request, HttpServletRequest headerRequest) {
+        if (!tokenCredEntialsValidate(headerRequest))
+            return StatusFalse.JWT_CREDENTIALS_STATUS_FALSE;
+
+        noticeRepository.save(
+                Notice.builder()
+                        .id(request.getId())
+                        .title(request.getTitle())
+                        .text(request.getText())
+                        .build()
+        );
+        return StatusTrue.UPDATE_ADD_STATUS_TRUE;
+    }
+
+    public Constable deleteNotice(NoticeDto.deleteNoticeRequest request, HttpServletRequest headerRequest) {
+        if (!tokenCredEntialsValidate(headerRequest))
+            return StatusFalse.JWT_CREDENTIALS_STATUS_FALSE;
+
+        noticeRepository.deleteById(request.getId());
+        return StatusTrue.DELETE_ADD_STATUS_TRUE;
+    }
 }
