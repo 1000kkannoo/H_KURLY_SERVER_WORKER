@@ -63,13 +63,13 @@ public class WorkerListController {
         return workerListService.endWorker(headerRequest);
     }
 
-    @GetMapping("list/working")
+    @GetMapping("list/info")
     public List<Object> WorkingInfo(HttpServletRequest headerRequest)
     {
         return workerListService.WorkingInfo(headerRequest);
     }
 
-    @GetMapping("list/worked")
+    @GetMapping("list/record/info")
     public List<Object> WorkedInfo(HttpServletRequest headerRequest)
     {
         return workerListService.WorkedInfo(headerRequest);
