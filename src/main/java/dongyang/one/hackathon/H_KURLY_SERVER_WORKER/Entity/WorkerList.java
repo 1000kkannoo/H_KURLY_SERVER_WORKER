@@ -14,11 +14,12 @@ import java.util.Set;
 @Entity
 public class WorkerList {
 
-    // 논리적 설계의 FK ( 근무자 ID )
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // 논리적 설계의 FK ( USER_ID )
+    @NotNull
     private String userId;
 
     private String workTime;
@@ -29,8 +30,10 @@ public class WorkerList {
 
     private String workDay;
 
+    @NotNull
     private Boolean con;
 
+    @NotNull
     private Boolean edu;
 
     @NotNull

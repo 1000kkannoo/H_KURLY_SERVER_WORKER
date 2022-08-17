@@ -32,9 +32,12 @@ public class Record {
     @LastModifiedDate
     private LocalDateTime end;
 
+    @NotNull
     private String workPlace;
 
+    @NotNull
     private String workType;
 
+    @NotNull
     private Integer wcnt;
 }
