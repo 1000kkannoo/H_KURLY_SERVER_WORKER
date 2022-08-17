@@ -26,10 +26,7 @@ public class Notice {
     @NotNull
     private String text;
 
-    @CreatedDate
-    private LocalDateTime createAt;
-
     @LastModifiedDate
-    private LocalDateTime updateAt;
+    private LocalDateTime date;
 
 }
