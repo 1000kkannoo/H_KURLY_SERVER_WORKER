@@ -15,4 +15,24 @@ public class NoticeDto {
         private String title;
         private String text;
     }
+
+    @Getter
+    @Setter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class updateNoticeRequest{
+        private Long id;
+        private String title;
+        private String text;
+    }
+
+    @Getter
+    @Setter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class deleteNoticeRequest{
+        private Long id;
+    }
 }
